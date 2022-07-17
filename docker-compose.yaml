@@ -1,0 +1,39 @@
+version: "3.8"
+
+services:
+  frontend:
+    build: ./frontend
+    networks:
+    - pm-buli-network
+    ports:
+    - "${FRONTEND_PUBLISHED_PORT}:80"
+    volumes:
+    - "./frontend:/usr/share/nginx/html:ro"
+
+  backend1:
+    build: ./server
+    ports:
+    - "${BACKEND1_PUBLISHED_PORT}:3000"
+    networks:
+    - pm-buli-network
+    volumes:
+    - "./server/db.json:/db.json"
+
+  backend2:
+    build: ./server2
+    ports:
+    - "${BACKEND2_PUBLISHED_PORT}:3000"
+    networks:
+    - pm-buli-network
+    volumes:
+    - "./server/db.json:/db.json"
+
+  loadbalancer:
+    build: ./loadbalance
+    ports:
+    - "${LOADBALANCER_PUBLISHED_PORT}:80"
+    networks:
+    - pm-buli-network
+
+networks:
+  pm-buli-network:
